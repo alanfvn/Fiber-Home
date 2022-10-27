@@ -1,0 +1,20 @@
+/* https://stackoverflow.com/a/73419966 */
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout main {
+  flex-grow: 1;
+}
+
+
+.login-form{
+  position: absolute;
+  background-color: rgba(0,0,0,0.05);
+  height: 100%;
+  width: 100%;
+}
+
