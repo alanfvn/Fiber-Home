@@ -16,11 +16,9 @@ function Login(){
   const submit = async (e) => {
     const {username, pass} = data || {};
     e.preventDefault();
-
     if(!username || !pass){
       return
     }
-    alert('exito')
   }
 
   return (
