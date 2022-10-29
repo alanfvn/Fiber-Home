@@ -22,7 +22,6 @@ create table tb_users(
   references tb_groups(group_id) on delete set null 
 );
 
-
 -- tabla de ventas
 create table tb_sells(
   sell_id serial primary key not null,
@@ -52,25 +51,3 @@ create table tb_installations(
   references tb_users(user_id) on delete cascade
 );
 
--- tabla de equipos
-create table tb_teams(
-  team_id serial primary key not null,
-  team_name text unique,
-  team_leader int,
-
-  constraint fk_team_leader foreign key(team_leader)
-  references tb_users(user_id) on delete cascade
-);
-
--- tabla de miembros de equipos
-create table tb_team_members(
-  team_member_id serial primary key not null,
-  team_id int,
-  team_member int, 
-
-  constraint fk_member1 foreign key(team_id) 
-  references tb_teams(team_id) on delete cascade,
-
-  constraint fk_members2 foreign key(team_member)
-  references tb_users(user_id) on delete cascade
-);

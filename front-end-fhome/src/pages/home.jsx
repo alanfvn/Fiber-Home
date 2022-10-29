@@ -29,7 +29,7 @@ function Home(){
         </div>
 
         {/* mision y vision */}
-        <div className="home-mission">
+        <div className="home-mission mb-5">
           <Container className="mt-5 mb-5">
             <div className="mission mb-5">
               <h2 className="text-light">Nuestra misión</h2>
@@ -56,7 +56,6 @@ function Home(){
           
         <div className='home-locations mt-5 mb-5'>
           <Container className='d-flex justify-content-between' >
-
             <Card style={{width: "30%"}}>
               <Card.Img variant="top" src={card1} />
               <Card.Body>
@@ -68,7 +67,6 @@ function Home(){
                 </Card.Text>
               </Card.Body>
             </Card>
-
             <Card style={{width: "30%"}}>
               <Card.Img variant="top" src={card2} />
               <Card.Body>
@@ -80,7 +78,6 @@ function Home(){
                 </Card.Text>
               </Card.Body>
             </Card>
-
             <Card style={{width: "30%"}}>
               <Card.Img variant="top" src={card3} />
               <Card.Body>
@@ -92,8 +89,6 @@ function Home(){
               </Card.Body>
             </Card>
           </Container>
-
-
         </div>
       </main>
       <CustomFooter/>
