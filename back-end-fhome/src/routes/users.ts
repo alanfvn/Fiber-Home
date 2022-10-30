@@ -1,7 +1,7 @@
 import express from 'express' 
 import User from '../models/user'
 import { verifyToken } from '../jwt/jwt-man'
-import {create_staff} from '../db/db_man'
+import {upsert_user, delete_user, get_users} from '../db/db_man'
 
 const users = express.Router()
 
@@ -16,7 +16,21 @@ users.use((req, res, next)=>{
   next()
 })
 
-users.post('/upsert_user', async (req,res)=>{
+//user list
+users.get('/staff_list', async (req, res)=>{
+  const {query} = req.body
+  const data = await get_users(query, true);
+  res.json(data)
+})
+
+users.get('/client_list', async (req, res)=>{
+  const {query} = req.body
+  const data = await get_users(query, false);
+  res.json(data)
+})
+
+//update and insert user
+users.post('/upsert', async (req,res)=>{
   const {
     user_name, user_group, user_password, 
     names, surnames, phone, 
@@ -25,24 +39,29 @@ users.post('/upsert_user', async (req,res)=>{
   } = req.body || {}
 
   if(!user_name || !user_group || !user_password || 
-    !names && !surnames || !phone || 
+    !names || !surnames || !phone || 
     !dpi || !email || !address || !date_of_birth) {
     res.status(400).send("Invalid request you must specify all parameters")
     return
   }
-
   const user = new User({
     user_name, user_group, user_password, 
     names, surnames, phone,dpi,
     email, address, date_of_birth 
   })
-  const {log_data} = await create_staff(user) || {}
+  const {log_data} = await upsert_user(user) || {}
   res.json({"message": log_data});
 })
 
-users.get('/user_list', async (req, res)=>{
-
-  res.json({})
+//delete user
+users.delete('/delete', async (req, res)=>{
+  const {uid} = req.body
+  if(!uid){
+    res.status(400).send("Invalid request you must specify the user id")
+    return
+  }
+  const message = await delete_user(uid) 
+  res.json(message)
 })
 
 export default users
