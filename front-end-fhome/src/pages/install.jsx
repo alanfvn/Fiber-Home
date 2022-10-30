@@ -1,36 +1,37 @@
 import CustomNavbar from "./components/navbar"
 import CustomFooter from './components/footer'
 import DataTable from 'react-data-table-component';
-import SellModal from "./modals/sell-modal";
+import InstallModal from "./modals/install-modal";
 import React from "react";
 import { Container, Badge } from "react-bootstrap";
 
-function Sells(){
+function Installation(){
 
   const [modal,setModal] = React.useState(false)
   const data = []
 
   const columns = [
     {
-      name: 'UID Contrato',
+      name: 'Id instalacion',
       selector: row => row.title,
     },
     {
-      name: 'Fecha',
+      name: 'Trabajador asignado',
       selector: row => row.year,
     },
     {
-      name: 'Instalación programada',
+      name: 'Fecha de instalacion',
+      selector: row => '02/02/2022'
+      // selector: row =><Badge bg="danger" text="light">No programada</Badge> 
+    },
+    {
+      name: 'Instalcion realizada',
       selector: row =><Badge bg="success" text="light">No programada</Badge> 
       // selector: row =><Badge bg="danger" text="light">No programada</Badge> 
     },
     {
       name: 'Visualizar',
       selector: row => <button onClick={()=>{setModal(true)}} className="btn btn-info fa-solid fa-clipboard-list"/>
-    },
-    {
-      name: 'Eliminar',
-      selector: row => <button onClick={()=>{setModal(true)}} className="btn btn-danger fa-solid fa-trash"/>,
     },
   ];
 
@@ -43,16 +44,16 @@ function Sells(){
     <div className="layout">
       <CustomNavbar/>
       <main>
-        <SellModal show={modal} onHide={()=>setModal(false)}/>
+        <InstallModal show={modal} onHide={()=>setModal(false)}/>
         <Container className="mt-5 mb-5">
 
           <div className="d-flex mb-4">
-            <input className="form-control rounded-0 w-75" type="search" placeholder="Buscar ventas.." aria-label="Search"/>
-            <button className="btn btn-primary rounded-0">Buscar venta</button>
-          </div>
-          <div class="d-flex mb-4">
-            <input className="form-control rounded-0 w-25" type="date"/>
-            <input className="form-control rounded-0 w-25" type="date"/>
+            <input className="form-control rounded-0 w-75" type="search" placeholder="Buscar instalaciones.." aria-label="Search"/>
+            <button className="btn btn-primary rounded-0" 
+              data-toggle="tooltip" 
+              data-placement="top" 
+              title="Puedes buscar por cliente o encargado de instalacion"
+            >Realizar busqueda</button>
           </div>
 
           <div className="form-check mb-4">
@@ -65,9 +66,7 @@ function Sells(){
             data={data}
             pagination
             />
-          <div className="mt-3">
-            <a className="btn btn-success fas-fa fa-plus rounded-0" onClick={()=>{}}> Agregar Venta</a>
-          </div>
+
         </Container>
       </main>
       <CustomFooter/>
@@ -75,5 +74,5 @@ function Sells(){
   )
 }
 
-export default Sells
+export default Installation
 

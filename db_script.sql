@@ -42,7 +42,6 @@ create table tb_sells(
 -- tabla de instalaciones
 create table tb_installations(
   installation_id serial primary key not null,
-  installation_done boolean,
   installation_date timestamptz,
   sell_id int,
   assigned_worker int,

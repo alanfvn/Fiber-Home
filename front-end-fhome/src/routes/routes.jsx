@@ -5,6 +5,7 @@ import Login from '../pages/login'
 import Sells from '../pages/sells';
 import Clients from '../pages/clients';
 import Staff from '../pages/staff';
+import Installations from '../pages/install';
 
 function PageRoutes(){
 
@@ -20,7 +21,7 @@ function PageRoutes(){
         <Route path="/sells" element={<Sells/>}/>
         <Route path="/clients" element={<Clients/>}/>
         <Route path="/staff" element={<Staff/>}/>
-        <Route path="/installations" element={<Clients/>}/>
+        <Route path="/installations" element={<Installations/>}/>
 
       </Routes>
     </BrowserRouter>
@@ -28,12 +29,12 @@ function PageRoutes(){
 }
 
 
-function ProtectedRoute(){
+function PRoute(){
   const isAuthenticated = false
   return isAuthenticated ? <Outlet/> : <Navigate to="/"/>
 }
 
-function RedirectRoute(){
+function RRoute(){
   const isAuthenticated = false
   return isAuthenticated ? <Outlet/> : <Navigate to="/home"/>
 }

@@ -1,7 +1,7 @@
 import {Modal, Form, Button, Alert} from 'react-bootstrap'
 import React from 'react'
 
-function ClientModal(props){
+function StaffModal(props){
 
   const [error, setError] = React.useState()
   const [inputs, setInputs] = React.useState({})
@@ -19,16 +19,16 @@ function ClientModal(props){
     setInputs({...inputs, [name]: value})
   }
 
-
   const submit = (e) => {
     e.preventDefault()
     const {
-      names,surnames, 
-      phone,dpi, email, 
+      user, names, 
+      surnames, phone, 
+      dpi, email, 
       address, birth_date
     } = inputs 
 
-    const valid = ( names && surnames && phone
+    const valid = ( user && names && surnames && phone
     && dpi && email && address && birth_date )
 
     if(!valid){
@@ -46,7 +46,7 @@ function ClientModal(props){
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title>Cliente</Modal.Title>
+        <Modal.Title>Personal</Modal.Title>
       </Modal.Header>
 
       <Form onSubmit={submit}>
@@ -54,7 +54,7 @@ function ClientModal(props){
           { error && <Alert variant='danger'>{error}</Alert> }
           <Form.Group className='mb-2'>
             <Form.Label>Usuario</Form.Label>
-            <Form.Control disabled/>
+            <Form.Control name="user" onChange={handle}/>
           </Form.Group>
           <Form.Group className='mb-2'>
             <Form.Label>Nombres</Form.Label>
@@ -64,13 +64,23 @@ function ClientModal(props){
             <Form.Label>Apellidos</Form.Label>
             <Form.Control name="surnames" onChange={handle}/>
           </Form.Group>
+
+          <Form.Group className='mb-2'>
+            <Form.Label>Rol</Form.Label>
+            <Form.Control as="select" defaultValue="1">
+              <option value="1">Administrador</option>
+              <option value="2">Supervisor</option>
+              <option value="3">Ventas</option>
+            </Form.Control>
+          </Form.Group>
+
           <Form.Group className='mb-2'>
             <Form.Label>Telefono</Form.Label>
             <Form.Control name="phone" onChange={handle}/>
           </Form.Group>
           <Form.Group className='mb-2'>
             <Form.Label>DPI</Form.Label>
-            <Form.Control type='text' pattern='^[0-9]{13}$' name="dpi" onChange={handle}/>
+            <Form.Control name="dpi" onChange={handle}/>
           </Form.Group>
           <Form.Group className='mb-2'>
             <Form.Label>Email</Form.Label>
@@ -94,4 +104,4 @@ function ClientModal(props){
   )
 }
 
-export default ClientModal
+export default StaffModal

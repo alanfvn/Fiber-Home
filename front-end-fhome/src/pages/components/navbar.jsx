@@ -7,7 +7,7 @@ function CustomNavbar(){
     <>
       <Navbar bg="dark" variant="dark" expand="sm">    
         <Container>
-          <Navbar.Brand>FiberHome</Navbar.Brand>
+          <Navbar.Brand href="/">FiberHome</Navbar.Brand>
           <Navbar.Toggle className="coloring"/>
           <Navbar.Collapse className='justify-content-end'>
             <Nav activeKey={location.pathname}>

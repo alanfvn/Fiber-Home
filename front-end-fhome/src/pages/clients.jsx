@@ -2,8 +2,8 @@ import CustomNavbar from "./components/navbar"
 import CustomFooter from './components/footer'
 import DataTable from 'react-data-table-component';
 import ClientModal from "./modals/client-modal";
-import { Container } from "react-bootstrap";
 import React from "react";
+import { Container } from "react-bootstrap";
 
 function Clients(){
 
@@ -12,11 +12,15 @@ function Clients(){
 
   const columns = [
     {
-      name: 'Nombres',
+      name: 'Id',
       selector: row => row.title,
     },
     {
-      name: 'Usuario',
+      name: 'Nombre completo',
+      selector: row => row.year,
+    },
+    {
+      name: 'DPI',
       selector: row => row.year,
     },
     {
@@ -41,8 +45,8 @@ function Clients(){
       <main>
         <ClientModal show={modal} onHide={()=>setModal(false)}/>
         <Container className="mt-5 mb-5">
-          <div className="d-flex px-0 mb-4 justify-content-center">
-            <input class="form-control rounded-0 w-75" type="search" placeholder="Buscar usuario.." aria-label="Search"/>
+          <div className="d-flex px-0 mb-4">
+            <input class="form-control rounded-0 w-75" type="search" placeholder="Buscar cliente.." aria-label="Search"/>
             <button class="btn btn-primary rounded-0">Buscar cliente</button>
           </div>
           <DataTable
@@ -50,9 +54,6 @@ function Clients(){
             data={data}
             pagination
             />
-          <div className="mt-3">
-            <a className="btn btn-success fas-fa fa-plus rounded-0" onClick={()=>{}}> Agregar cliente</a>
-          </div>
         </Container>
       </main>
       <CustomFooter/>
