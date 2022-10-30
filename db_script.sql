@@ -50,3 +50,98 @@ create table tb_installations(
   references tb_users(user_id) on delete cascade
 );
 
+--procedimientos
+-- CREAR USUARIO
+create procedure upsert_user(
+	user_n text,
+	user_g int,user_pass text,
+	user_fname text,user_lname text,
+	user_phone text,user_dpi text,
+	user_email text,user_address text,
+	user_birth timestamptz,
+	out log_data text
+)
+language plpgsql
+as $$
+declare
+-- variable declaration
+begin
+	
+	begin
+		
+		if exists(select 1 from tb_users where lower(user_name) = lower(user_n)) then
+			-- user exists update it.
+			update tb_users set 
+			user_group = user_g,
+			user_password = crypt(user_pass, gen_salt('bf', 4)),
+			names = user_fname, surnames = user_lname,
+			phone = user_phone, dpi = user_dpi,
+			email = user_email, address = user_address,
+			date_of_birth = user_birth
+			where user_name = user_n;
+		else
+			-- user doesn't exist create it.
+			insert into tb_users(
+				user_name, user_group, 
+				user_password, 
+				names, surnames, 
+				phone, dpi, email, 
+				address, date_of_birth
+			)
+			values(
+				user_n, user_g, 
+				crypt(user_pass, gen_salt('bf', 4)),
+				user_fname, user_lname,
+				user_phone, user_dpi, 
+				user_email, user_address,
+				user_birth
+			);
+		end if;
+		
+		log_data := 'OK';
+	
+	exception when others then
+		log_data := SQLERRM; 
+	end; 
+	
+end; $$
+
+--functions
+create function auth_user(uname text, upass text)
+returns table(
+	uid int,
+	username text,
+	fullname text,
+	gid int,
+	gname text
+)
+as $$
+begin
+	return query (
+		select user_id, user_name, concat(names, surnames),
+		user_group, group_name from tb_users inner join 
+		tb_groups on group_id = user_group
+		where lower(user_name) = lower(uname) and
+		user_password = crypt(upass, user_password)
+	);
+end; 
+$$ language plpgsql
+
+
+
+
+
+-- PRUEBAS
+DO
+$$
+DECLARE log_d text;
+BEGIN
+    CALL upsert_user(
+      'alan', 2, 'alan123', 
+      'Alan David', 'Gonzalez Lopez', '20204040', 
+      '28790000101', 'alan@gmail.com', 
+      '1a calle coban a.v', '2000-09-24', log_d
+    );
+    RAISE NOTICE 'resp: %', log_d;
+END
+$$
