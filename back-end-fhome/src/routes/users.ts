@@ -18,13 +18,13 @@ users.use((req, res, next)=>{
 
 //user list
 users.get('/staff_list', async (req, res)=>{
-  const {query} = req.body
+  const query = `${req.query.filter||''}`
   const data = await get_users(query, true);
   res.json(data)
 })
 
 users.get('/client_list', async (req, res)=>{
-  const {query} = req.body
+  const query = `${req.query.filter||''}`
   const data = await get_users(query, false);
   res.json(data)
 })

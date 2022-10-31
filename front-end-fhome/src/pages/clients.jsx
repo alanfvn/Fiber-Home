@@ -9,9 +9,9 @@ import { Container } from "react-bootstrap";
 
 function Clients(){
 
-  const [modal,setModal] = useState(false)
   const [search, setSearch] = useState()
   const [users, setUsers] = useState([])
+  const [user, setCurrentUser] = useState()
 
   const fetchClients = async (query) =>{
     try{
@@ -44,15 +44,14 @@ function Clients(){
     {
       name: 'Editar',
       selector: row => <button onClick={()=>{
-        setModal(true)
+        setCurrentUser(users.find(x => x.user_id === row.user_id))
       }} className="btn btn-warning fa-solid fa-user-pen"/>
     },
     {
       name: 'Eliminar',
       selector: row => <button onClick={()=>{
-        setModal(true)
+        window.confirm("De verdad deseas borrar?")
       }} className="btn btn-danger fa-solid fa-trash"/>,
-
     },
   ];
 
@@ -64,18 +63,15 @@ function Clients(){
     <div className="layout">
       <CustomNavbar/>
       <main>
-        <UserModal show={modal} onHide={()=>setModal(false)}/>
+        {user && <UserModal show={user} onHide={()=>setCurrentUser(null)}/>}
         <Container className="mt-5 mb-5">
           {/* buscador */}
           <div className="d-flex px-0 mb-4">
             <input 
-              className="form-control rounded-0 w-75" 
+              className="form-control rounded-0" 
               placeholder="Buscar cliente.." 
               onChange={(e)=>setSearch(e.target.value)}
               />
-            <button className="btn btn-primary rounded-0" onClick={()=>alert(search)}>
-              Buscar cliente
-            </button>
           </div>
           {/* contenido de la tabla */}
           <DataTable

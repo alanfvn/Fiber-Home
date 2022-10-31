@@ -48,7 +48,6 @@ function Sells(){
 
           <div className="d-flex mb-4">
             <input className="form-control rounded-0 w-75" type="search" placeholder="Buscar ventas.." aria-label="Search"/>
-            <button className="btn btn-primary rounded-0">Buscar venta</button>
           </div>
           <div className="d-flex mb-4">
             <input className="form-control rounded-0 w-25" type="date"/>

@@ -48,14 +48,8 @@ function Installation(){
         <Container className="mt-5 mb-5">
 
           <div className="d-flex mb-4">
-            <input className="form-control rounded-0 w-75" type="search" placeholder="Buscar instalaciones.." aria-label="Search"/>
-            <button className="btn btn-primary rounded-0" 
-              data-toggle="tooltip" 
-              data-placement="top" 
-              title="Puedes buscar por cliente o encargado de instalacion"
-            >Realizar busqueda</button>
+            <input className="form-control rounded-0" type="search" placeholder="Buscar instalaciones.." aria-label="Search"/>
           </div>
-
           <div className="form-check mb-4">
             <input className="form-check-input" id="instalaciones" type="checkbox"/>
             <label className="form-check-label" htmlFor="instalaciones">Instalaciones no programadas</label>
@@ -66,7 +60,6 @@ function Installation(){
             data={data}
             pagination
             />
-
         </Container>
       </main>
       <CustomFooter/>

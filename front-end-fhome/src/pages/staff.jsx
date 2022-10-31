@@ -11,21 +11,10 @@ import { get_group_name} from '../util/groups'
 function Staff(){
 
   const group = get_group()
-  const [modal,setModal] = useState(false)
+  const token = get_token()
+  const [search, setSearch] = useState()
   const [users, setUsers] = useState([])
-
-  const fetchStaff = async (query) =>{
-    try{
-      const resp = await HttpMan.get('/user/staff_list', {
-        headers: {
-          'Authorization': get_token() 
-        }
-      });
-      setUsers(resp.data)
-    }catch(e){
-      console.log(`Fetch client error: ${e}`)
-    }
-  }
+  const [user, setCurrentUser] = useState()
 
   const columns = [
     {
@@ -46,13 +35,62 @@ function Staff(){
     },
     {
       name: 'Editar',
-      selector: row => <button onClick={()=>{setModal(true)}} className="btn btn-warning fa-solid fa-user-pen"/>
+      selector: row => <button onClick={()=>{
+        setCurrentUser(users.find(x => x.user_id === row.user_id))
+      }} className="btn btn-warning fa-solid fa-user-pen"/>
     },
     {
       name: 'Eliminar',
-      selector: row => <button onClick={()=>{setModal(true)}} className="btn btn-danger fa-solid fa-trash"/>,
+      selector: row => <button onClick={()=>{
+        if(!window.confirm("De verdad deseas borrar?")){
+          return
+        }
+        deleteUser(row.user_id).then(()=>{
+          setSearch()
+          
+        })
+      }} className="btn btn-danger fa-solid fa-trash"/>,
     },
   ];
+
+  const fetchStaff = async () =>{
+    try{
+      const resp = await HttpMan.get('/user/staff_list', {
+        headers: {
+          'Authorization': token
+        },
+        params:{
+          'filter': search
+        }
+      });
+      setUsers(resp.data)
+    }catch(e){
+      console.log(`Fetch client error: ${e}`)
+    }
+  }
+
+  const deleteUser = async (uid) =>{
+    try{
+      const resp = await HttpMan.delete('/user/delete', {
+        headers: {
+          'Authorization': token
+        },
+        data:{
+          uid
+        }
+      })
+    }catch(e){
+      console.log(`Error when trying to delete the user ${e}`)
+    }
+  }
+
+  useEffect(()=>{
+    const delay = setTimeout(()=>{
+      console.log(search)
+    }, 500)
+    return ()=>clearTimeout(delay)
+  },[search])
+
 
   useEffect(()=>{
     fetchStaff()
@@ -66,10 +104,9 @@ function Staff(){
           {
           group === "1" ?
             <>
-              <UserModal show={modal} onHide={()=>setModal(false)}/>
+              {user && <UserModal show={user} onHide={()=>setCurrentUser(null)}/>}
               <div className="d-flex px-0 mb-4">
-                <input className="form-control rounded-0 w-75" type="search" placeholder="Buscar personal.."/>
-                <button className="btn btn-primary rounded-0">Buscar personal</button>
+                <input className="form-control rounded-0" type="search" onChange={(e)=>setSearch(e.target.value)} placeholder="Buscar personal.."/>
               </div>
               <DataTable
                 columns={columns}
@@ -77,7 +114,7 @@ function Staff(){
                 pagination
                 />
               <div className="mt-3">
-                <a className="btn btn-success fas-fa fa-plus rounded-0" onClick={()=>{}}> Agregar personal</a>
+                <a className="btn btn-success fas-fa fa-plus rounded-0" onClick={()=>setCurrentUser({})}> Agregar personal</a>
               </div>
             </>
             :
@@ -98,4 +135,3 @@ function Staff(){
 }
 
 export default Staff
-
