@@ -23,11 +23,11 @@ function CustomNavbar(){
               {
                 auth ?
                 <>
-                  <Nav.Link href="/clients">Clientes</Nav.Link>
-                  <Nav.Link href="/staff">Personal</Nav.Link>
-                  <Nav.Link href="/sells">Ventas</Nav.Link>
-                  <Nav.Link href="/installations">Instalaciones</Nav.Link>
-                  <Nav.Link href="#" onClick={logout}>Cerrar sesión</Nav.Link>
+                  <Nav.Link href="/staff"><i className='fa-solid fa-clipboard-user'/> Personal</Nav.Link>
+                  <Nav.Link href="/clients"><i className='fa-solid fa-users'/> Clientes</Nav.Link>
+                  <Nav.Link href="/sells"><i className='fa-solid fa-dollar'/> Ventas</Nav.Link>
+                  <Nav.Link href="/installations"><i className="fa-solid fa-screwdriver-wrench"/> Instalaciones</Nav.Link>
+                  <Nav.Link href="#" onClick={logout}><i className="fa-solid fa-right-from-bracket"/> Cerrar sesión</Nav.Link>
                 </>
                 :
                 <Nav.Link href="/login">Iniciar sesión</Nav.Link>

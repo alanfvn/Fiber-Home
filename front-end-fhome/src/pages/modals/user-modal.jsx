@@ -1,3 +1,4 @@
+
 import {Modal, Form, Button, Alert} from 'react-bootstrap'
 import React from 'react'
 
@@ -35,7 +36,6 @@ function StaffModal(props){
       setError("ERROR: Debes llenar todos los campos")
       return
     }
-    //guardado exitoso
     closeModal()
   }
 
@@ -46,16 +46,30 @@ function StaffModal(props){
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title>Personal</Modal.Title>
+        <Modal.Title>Usuario</Modal.Title>
       </Modal.Header>
-
       <Form onSubmit={submit}>
         <Modal.Body>
           { error && <Alert variant='danger'>{error}</Alert> }
           <Form.Group className='mb-2'>
             <Form.Label>Usuario</Form.Label>
-            <Form.Control name="user" onChange={handle}/>
+            <Form.Control name="user_name" onChange={handle}/>
           </Form.Group>
+
+          <Form.Group className='mb-2'>
+            <Form.Label>Contraseña</Form.Label>
+            <Form.Control type="password" name="user_password" onChange={handle}/>
+          </Form.Group>
+
+          <Form.Group className='mb-2'>
+            <Form.Label>Rol</Form.Label>
+            <Form.Control as="select" name="user_group" defaultValue="1">
+              <option value="1">Administrador</option>
+              <option value="2">Supervisor</option>
+              <option value="3">Ventas</option>
+            </Form.Control>
+          </Form.Group>
+
           <Form.Group className='mb-2'>
             <Form.Label>Nombres</Form.Label>
             <Form.Control name="names" onChange={handle}/>
@@ -64,16 +78,6 @@ function StaffModal(props){
             <Form.Label>Apellidos</Form.Label>
             <Form.Control name="surnames" onChange={handle}/>
           </Form.Group>
-
-          <Form.Group className='mb-2'>
-            <Form.Label>Rol</Form.Label>
-            <Form.Control as="select" defaultValue="1">
-              <option value="1">Administrador</option>
-              <option value="2">Supervisor</option>
-              <option value="3">Ventas</option>
-            </Form.Control>
-          </Form.Group>
-
           <Form.Group className='mb-2'>
             <Form.Label>Telefono</Form.Label>
             <Form.Control name="phone" onChange={handle}/>
@@ -92,7 +96,7 @@ function StaffModal(props){
           </Form.Group>
           <Form.Group className='mb-2'>
             <Form.Label>Fecha de nacimiento</Form.Label>
-            <Form.Control name="birth_date" onChange={handle} type="date"/>
+            <Form.Control name="date_of_birth" onChange={handle} type="date"/>
           </Form.Group>
         </Modal.Body>
 

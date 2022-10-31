@@ -2,15 +2,12 @@ import Cookies from "universal-cookie"
 
 const cookies = new Cookies()
 
-function get_cookie(name){
-  /* available cookies:
-  - jwt
-  - uid -> user id
-  - username
-  - gid -> group id
-  - fullname  */
-  return cookies.get(name)
-}
+/* available cookies:
+- jwt
+- uid -> user id
+- username
+- gid -> group id
+- fullname  */
 
 function clean_cookies(){
   const stored_cookies = cookies.getAll()
@@ -31,4 +28,12 @@ function is_user_auth(){
   return cookies.get('jwt') ?? false
 }
 
-export {get_cookie, clean_cookies, set_cookies, is_user_auth}
+function get_token(){
+  return `Bearer ${cookies.get('jwt')}`
+}
+
+function get_group(){
+  return cookies.get('gid') ?? -1
+}
+
+export {clean_cookies, set_cookies, is_user_auth, get_token, get_group}

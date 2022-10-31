@@ -36,7 +36,7 @@ function Installation(){
   ];
 
 
-  for(let i =0; i< 5; i++){
+  for(let i =0; i< 1005; i++){
     data[i] = {id: i, title: `p: ${i}`, year: '1900'}
   }
 
@@ -58,7 +58,7 @@ function Installation(){
 
           <div className="form-check mb-4">
             <input className="form-check-input" id="instalaciones" type="checkbox"/>
-            <label className="form-check-label" for="instalaciones">Instalaciones no programadas</label>
+            <label className="form-check-label" htmlFor="instalaciones">Instalaciones no programadas</label>
           </div>
 
           <DataTable

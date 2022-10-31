@@ -50,14 +50,14 @@ function Sells(){
             <input className="form-control rounded-0 w-75" type="search" placeholder="Buscar ventas.." aria-label="Search"/>
             <button className="btn btn-primary rounded-0">Buscar venta</button>
           </div>
-          <div class="d-flex mb-4">
+          <div className="d-flex mb-4">
             <input className="form-control rounded-0 w-25" type="date"/>
             <input className="form-control rounded-0 w-25" type="date"/>
           </div>
 
           <div className="form-check mb-4">
             <input className="form-check-input" id="instalaciones" type="checkbox"/>
-            <label className="form-check-label" for="instalaciones">Instalaciones no programadas</label>
+            <label className="form-check-label" htmlFor="instalaciones">Instalaciones no programadas</label>
           </div>
 
           <DataTable

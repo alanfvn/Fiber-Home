@@ -1,7 +1,8 @@
 import jwt, {Secret} from 'jsonwebtoken'
 import AuthenticatedUser from '../models/user_auth'
 
-const EXP_TIME = 60*5
+//expiracion de 1 hora
+const EXP_TIME = 24*60*60 
 const SECRET_KEY: Secret = `${process.env.JWT_KEY}` 
 
 function createToken(user: AuthenticatedUser){
