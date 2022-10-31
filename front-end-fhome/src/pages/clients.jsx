@@ -46,8 +46,8 @@ function Clients(){
         <ClientModal show={modal} onHide={()=>setModal(false)}/>
         <Container className="mt-5 mb-5">
           <div className="d-flex px-0 mb-4">
-            <input class="form-control rounded-0 w-75" type="search" placeholder="Buscar cliente.." aria-label="Search"/>
-            <button class="btn btn-primary rounded-0">Buscar cliente</button>
+            <input className="form-control rounded-0 w-75" type="search" placeholder="Buscar cliente.." aria-label="Search"/>
+            <button className="btn btn-primary rounded-0">Buscar cliente</button>
           </div>
           <DataTable
             columns={columns}

@@ -25,7 +25,10 @@ auth.post('/login', async (req,res)=>{
   const loginData = new AuthenticatedUser(data);
   const token = createToken(loginData);
 
-  res.status(201).json({'jwt': token})
+  res.status(201).json({
+    'jwt': token, 
+    'user_info': loginData 
+  })
 })
 
 
