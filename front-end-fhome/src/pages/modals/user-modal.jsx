@@ -1,11 +1,12 @@
 
 import HttpMan from '../../util/http-man'
 import User from '../../models/user'
-import {Modal, Form, Button, Alert} from 'react-bootstrap'
+import { Modal, Button, Alert } from 'react-bootstrap'
 import { useState } from 'react'
 import { get_token } from '../../util/cookie-man'
 
 function StaffModal(props){
+
   const token = get_token()
   const {show, onHide} = props;
   const [error, setError] = useState()
@@ -57,71 +58,88 @@ function StaffModal(props){
 
   return (
     <Modal 
+      size="lg"
       show={show}
       onHide={closeModal}
     >
       <Modal.Header closeButton>
         <Modal.Title>Usuario</Modal.Title>
       </Modal.Header>
-      <Form onSubmit={submit}>
+      <form onSubmit={submit}>
         <Modal.Body>
           { error && <Alert variant='danger'>{error}</Alert> }
-          <Form.Group className='mb-2'>
-            <Form.Label>Usuario</Form.Label>
-            <Form.Control name="user_name" defaultValue={inputs?.user_name} disabled={editing} onChange={handle}/>
-          </Form.Group>
-          { staff && 
-            <>
-              <Form.Group className='mb-2'>
-                <Form.Label>Contraseña</Form.Label>
-                <Form.Control type="password" name="user_password" onChange={handle}/>
-              </Form.Group>
-              <Form.Group className='mb-2'>
-                <Form.Label>Rol</Form.Label>
-                <Form.Control as="select" name="user_group" onChange={handle} defaultValue={inputs?.user_group}>
+
+          <div className="row mb-3">
+            <div className="col-6">
+              <label>Usuario</label>
+              <input className='form-control' name="user_name" defaultValue={inputs?.user_name} disabled={editing} onChange={handle}/>
+            </div>
+            <div className="col-6">
+              <label>Email</label>
+              <input className='form-control' name="email" defaultValue={inputs?.email} onChange={handle}/>
+            </div>
+          </div>
+
+          {staff &&
+            <div className="row mb-3">
+              <div className="col-6">
+                <label htmlFor="">Grupo</label>
+                <select className="form-control" name="user_group" onChange={handle} defaultValue={inputs?.user_group}>
                   <option value="-1">Selecciona una opcion</option>
                   <option value="1">Administrador</option>
                   <option value="2">Supervisor</option>
                   <option value="3">Trabajador</option>
-                </Form.Control>
-              </Form.Group>
-            </>
+                </select>
+              </div>
+              <div className="col-6">
+                <label htmlFor="">Contraseña</label>
+                <input type='password' className="form-control" name="user_password" onChange={handle}/>
+              </div>
+            </div>
           }
-          <Form.Group className='mb-2'>
-            <Form.Label>Nombres</Form.Label>
-            <Form.Control name="names" onChange={handle} defaultValue={inputs?.names}/>
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Apellidos</Form.Label>
-            <Form.Control name="surnames" onChange={handle} defaultValue={inputs?.surnames}/>
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Telefono</Form.Label>
-            <Form.Control name="phone" maxLength="8" onChange={handle} defaultValue={inputs?.phone}/>
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>DPI</Form.Label>
-            <Form.Control name="dpi" maxLength="13" onChange={handle} defaultValue={inputs?.dpi} />
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Email</Form.Label>
-            <Form.Control name="email" onChange={handle} defaultValue={inputs?.email} type='email'/>
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Direccion</Form.Label>
-            <Form.Control name="address" defaultValue={inputs?.address} onChange={handle}/>
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Fecha de nacimiento</Form.Label>
-            <Form.Control name="date_of_birth" onChange={handle} defaultValue={
-              new Date(Date.parse(inputs?.date_of_birth)).toLocaleDateString('en-CA')
-            } type="date"/>
-          </Form.Group>
+          {/* nombres y apellidos */}
+          <div className="row mb-3">
+            <div className="col-6">
+              <label htmlFor="">Nombres</label>
+              <input className="form-control" name="names" onChange={handle} defaultValue={inputs?.names}/>
+            </div>
+            <div className="col-6">
+              <label htmlFor="">Apellidos</label>
+              <input className="form-control" name="surnames" onChange={handle} defaultValue={inputs?.surnames}/>
+            </div>
+          </div>
+
+          {/* telefono y dpi */}
+          <div className="row mb-3">
+            <div className="col-6">
+              <label htmlFor="">Teléfono</label>
+              <input className="form-control" name="phone" maxLength={8} onChange={handle} defaultValue={inputs?.phone}/>
+            </div>
+            <div className="col-6">
+              <label htmlFor="">DPI</label>
+              <input className="form-control" name="dpi" maxLength={13} onChange={handle} defaultValue={inputs?.dpi}/>
+            </div>
+          </div>
+
+          {/* direccion y fecha nacimiento */}
+          <div className="row mb-3">
+            <div className="col-6">
+              <label htmlFor="">Dirección</label>
+              <input type="text" className="form-control" name="address" onChange={handle} defaultValue={inputs?.address}/>
+            </div>
+            <div className="col-6">
+              <label htmlFor="">Fecha nacimiento</label>
+              <input type="date" className="form-control" name="date_of_birth" onChange={handle} defaultValue={
+                new Date(Date.parse(inputs?.date_of_birth)).toLocaleDateString('en-CA')
+              }/>
+            </div>
+          </div>
+
         </Modal.Body>
         <Modal.Footer>
           <Button type="submit">Guardar</Button>
         </Modal.Footer>
-      </Form>
+      </form>
     </Modal>
   )
 }

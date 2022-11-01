@@ -1,12 +1,13 @@
-import {Modal, Form, Button, Alert} from 'react-bootstrap'
+import {Modal, Button, Alert} from 'react-bootstrap'
 import React from 'react'
 import Select from 'react-select'
 
 function SellModal(props){
 
-  const [error, setError] = React.useState()
-  const [inputs, setInputs] = React.useState({})
   const {show, onHide} = props;
+  const [error, setError] = React.useState()
+  const [inputs, setInputs] = React.useState(show)
+  const isNew = Object.keys(show).length === 0
 
   const closeModal = () =>{
     setInputs({})
@@ -20,11 +21,8 @@ function SellModal(props){
     setInputs({...inputs, [name]: value})
   }
 
-
   const submit = (e) => {
     e.preventDefault()
-
-    //guardado exitoso
     closeModal()
   }
 
@@ -36,6 +34,7 @@ function SellModal(props){
 
   return (
     <Modal 
+      size="lg"
       show={show}
       onHide={closeModal}
       centered
@@ -44,44 +43,69 @@ function SellModal(props){
         <Modal.Title>Cliente</Modal.Title>
       </Modal.Header>
 
-      <Form onSubmit={submit}>
+      <form onSubmit={submit}>
         <Modal.Body>
           { error && <Alert variant='danger'>{error}</Alert> }
-          <Form.Group className='mb-2'>
-            <Form.Label>UID Contrato</Form.Label>
-            <Form.Control value="" disabled/>
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Cliente</Form.Label>
-            <Form.Control disabled/>
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Vendedor</Form.Label>
-            <Form.Control disabled/>
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Fecha venta</Form.Label>
-            <Form.Control type='date' disabled/>
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Instalador designado</Form.Label>
-            <Select
-              // defaultValue={"alan"}
-              isLoading={true}
-              isClearable={true}
-              isSearchable={true}
-              name="installer"
-              options={options}
-              />
-          </Form.Group>
-        </Modal.Body>
+          {
 
+          isNew ?
+            <>
+              {/* new sell */}
+
+            </>
+            :
+            <>
+              {/* apartado de cliente */}
+              <div className='form-row'>
+                <div className="form-group col-6">
+                  <label htmlFor="">UID Contrato</label>
+                  <input type="text" disabled={true} className="form-control"/>
+                </div>
+                <div className="form-group col-6">
+                  <label htmlFor="">Cliente</label>
+                  <input type="text" disabled={true} className="form-control"/>
+                </div>
+              </div>
+              {/* apartado del vendedor */}
+              <div className="form-row">
+                <div className="form-group col-6">
+                  <label htmlFor="">Vendedor</label>
+                  <input type="text" disabled={true} className="form-control"/>
+                </div>
+                <div className="form-group col-6">
+                  <label htmlFor="">Fecha venta</label>
+                  <input type="text" disabled={true} className="form-control"/>
+                </div>
+              </div>
+
+              {/* apartado de instalacion */}
+              <div className="form-row">
+                <div className="form-group col-6">
+                  <label htmlFor="">Instalador designado</label>
+                  <Select
+                    // defaultValue={"alan"}
+                    isLoading={true}
+                    isClearable={true}
+                    isSearchable={true}
+                    name="installer"
+                    options={options}
+                    />
+                </div>
+                <div className="form-group col-6">
+                  <label htmlFor="">Fecha de Instalación</label>
+                  <input type="date" className="form-control"/>
+                </div>
+              </div>
+            </>
+        }
+        </Modal.Body>
         <Modal.Footer>
           <Button type="submit">Guardar</Button>
         </Modal.Footer>
-      </Form>
+      </form>
     </Modal>
   )
 }
+
 
 export default SellModal

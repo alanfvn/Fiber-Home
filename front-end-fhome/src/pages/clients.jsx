@@ -58,7 +58,7 @@ function Clients(){
       name: 'Editar',
       selector: row => <button onClick={()=>{
         setCurrentUser(users.find(x => x.user_id === row.user_id))
-      }} className="btn btn-warning fa-solid fa-user-pen"/>
+      }} className="btn btn-warning"><i className="fa-solid fa-user-pen"/></button>
     },
     {
       name: 'Eliminar',
@@ -67,7 +67,7 @@ function Clients(){
           return
         }
         deleteUser(row.user_id).then(()=>triggerFetch())
-      }} className="btn btn-danger fa-solid fa-trash"/>,
+      }} className="btn btn-danger"><i className="fa-solid fa-trash"/></button>,
     },
   ];
 

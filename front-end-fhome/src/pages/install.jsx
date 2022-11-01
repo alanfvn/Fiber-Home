@@ -23,12 +23,10 @@ function Installation(){
     {
       name: 'Fecha de instalacion',
       selector: row => '02/02/2022'
-      // selector: row =><Badge bg="danger" text="light">No programada</Badge> 
     },
     {
       name: 'Instalcion realizada',
-      selector: row =><Badge bg="success" text="light">No programada</Badge> 
-      // selector: row =><Badge bg="danger" text="light">No programada</Badge> 
+      selector: row =><Badge variant={row.year ? "danger" : "success"} text="light">No programada</Badge> 
     },
     {
       name: 'Visualizar',

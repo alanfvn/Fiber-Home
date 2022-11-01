@@ -36,6 +36,7 @@ function InstallModal(props){
 
   return (
     <Modal 
+      size="lg"
       show={show}
       onHide={closeModal}
       centered

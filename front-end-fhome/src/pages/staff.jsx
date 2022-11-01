@@ -62,13 +62,13 @@ function Staff(){
     },
     {
       name: 'Rol',
-      selector: row =><Badge bg="primary" text="light">{get_group_name(row.user_group)}</Badge> 
+      selector: row =><Badge variant="primary" text="light">{get_group_name(row.user_group)}</Badge> 
     },
     {
       name: 'Editar',
       selector: row => <button onClick={()=>{
         setCurrentUser(users.find(x => x.user_id === row.user_id))
-      }} className="btn btn-warning fa-solid fa-user-pen"/>
+      }} className="btn btn-warning"><i className="fa-solid fa-user-pen"/></button>
     },
     {
       name: 'Eliminar',
@@ -77,7 +77,7 @@ function Staff(){
           return
         }
         deleteUser(row.user_id).then(()=>triggerFetch())
-      }} className="btn btn-danger fa-solid fa-trash"/>,
+      }} className="btn btn-danger"><i className="fa-solid fa-trash"/></button>,
     },
   ];
 
@@ -111,7 +111,9 @@ function Staff(){
               pagination
               />
             <div className="mt-3">
-              <a className="btn btn-success fas-fa fa-plus rounded-0" onClick={()=>setCurrentUser({})}> Agregar personal</a>
+              <a className="btn btn-success" onClick={()=>setCurrentUser({})}>
+                <i className="fa-solida fa-plus"/> Agregar personal
+              </a>
             </div>
           </Permission>
         </Container>
