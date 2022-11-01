@@ -80,7 +80,6 @@ function Home(){
             </Card.Body>
           </Card>
         </Container>
-
       </main>
       <CustomFooter/>
     </div>

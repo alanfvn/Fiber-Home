@@ -3,25 +3,24 @@ import CustomFooter from './components/footer'
 import DataTable from 'react-data-table-component';
 import UserModal from './modals/user-modal'
 import HttpMan from '../util/http-man'
+import Permission from "./components/permission";
+import { Container } from "react-bootstrap";
 import { useEffect, useState} from "react";
 import { get_token } from "../util/cookie-man";
-import { Container } from "react-bootstrap";
 
 function Clients(){
-
+  const token = get_token()
   const [search, setSearch] = useState()
   const [users, setUsers] = useState([])
   const [user, setCurrentUser] = useState()
 
-  const fetchClients = async (query) =>{
+  const fetchClients = async () =>{
     try{
       const resp = await HttpMan.get('/user/client_list', {
-        headers: {
-          'Authorization': get_token() 
-        }
+        headers: { 'Authorization': token },
+        params: { 'filter': search }
       });
       setUsers(resp.data)
-      console.log(resp)
     }catch(e){
       console.log(`Fetch client error: ${e}`)
     }
@@ -50,7 +49,9 @@ function Clients(){
     {
       name: 'Eliminar',
       selector: row => <button onClick={()=>{
-        window.confirm("De verdad deseas borrar?")
+        if(!window.confirm("De verdad deseas borrar?")){
+          return
+        }
       }} className="btn btn-danger fa-solid fa-trash"/>,
     },
   ];
@@ -65,20 +66,21 @@ function Clients(){
       <main>
         {user && <UserModal show={user} onHide={()=>setCurrentUser(null)}/>}
         <Container className="mt-5 mb-5">
-          {/* buscador */}
-          <div className="d-flex px-0 mb-4">
-            <input 
-              className="form-control rounded-0" 
-              placeholder="Buscar cliente.." 
-              onChange={(e)=>setSearch(e.target.value)}
+          <Permission group_access={[1,2]}>
+            <div className="d-flex px-0 mb-4">
+              <input 
+                className="form-control rounded-0" 
+                placeholder="Buscar cliente.." 
+                onChange={(e)=>setSearch(e.target.value)}
+                />
+            </div>
+            {/* contenido de la tabla */}
+            <DataTable
+              columns={columns}
+              data={users}
+              pagination
               />
-          </div>
-          {/* contenido de la tabla */}
-          <DataTable
-            columns={columns}
-            data={users}
-            pagination
-            />
+          </Permission>
         </Container>
       </main>
       <CustomFooter/>

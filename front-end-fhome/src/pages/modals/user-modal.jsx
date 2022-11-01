@@ -1,19 +1,28 @@
 
+import HttpMan from '../../util/http-man'
+import User from '../../models/user'
 import {Modal, Form, Button, Alert} from 'react-bootstrap'
-import {useState} from 'react'
+import { useState } from 'react'
+import { get_token } from '../../util/cookie-man'
 
 function StaffModal(props){
-
-
-
+  const token = get_token()
   const {show, onHide} = props;
   const [error, setError] = useState()
   const [inputs, setInputs] = useState(show)
-  //si show esta vacio {} estamos creando
-  const editing = Object.keys(show).length !== 0
-  //si el id de grupo es > 3 estamos editando cliente
-  const staff = (show?.user_group ?? 1) <= 3
+  const editing = Object.keys(show).length !== 0 //si el objeto no esta vacio estamos editando
+  const staff = (show?.user_group ?? 1) <= 3 //si el id de grupo es > 3 estamos editando cliente
 
+  const saveData = async () =>{
+    try{
+      const resp = await HttpMan.post('/user/upsert', inputs, {
+        headers: { Authorization: token }
+      }); 
+      console.log(resp.data)
+    }catch(err){
+      console.log(err)
+    }
+  }
 
   const closeModal = () =>{
     setInputs({})
@@ -29,16 +38,22 @@ function StaffModal(props){
 
   const submit = (e) => {
     e.preventDefault()
+    const user = new User(inputs);
+    const invalid = user.getInvalid()
 
-    const valid = false
-
-    if(!valid){
-      setError("ERROR: Debes llenar todos los campos")
+    if(!staff){
+      user.user_group = 4
+    }
+    if(invalid.length > 0){
+      let errors = 'ERROR: debes llenar los siguientes campos: '
+      errors += invalid.join(',\n')
+      setError(errors)
       return
     }
-    closeModal()
+    saveData().then(()=>{
+      closeModal()
+    })
   }
-
 
   return (
     <Modal 
@@ -56,21 +71,21 @@ function StaffModal(props){
             <Form.Control name="user_name" defaultValue={inputs?.user_name} disabled={editing} onChange={handle}/>
           </Form.Group>
           { staff && 
-          <>
+            <>
               <Form.Group className='mb-2'>
                 <Form.Label>Contraseña</Form.Label>
                 <Form.Control type="password" name="user_password" onChange={handle}/>
               </Form.Group>
-
               <Form.Group className='mb-2'>
                 <Form.Label>Rol</Form.Label>
-                <Form.Control as="select" name="user_group" defaultValue={inputs?.user_group ?? "3"}>
+                <Form.Control as="select" name="user_group" onChange={handle} defaultValue={inputs?.user_group}>
+                  <option value="-1">Selecciona una opcion</option>
                   <option value="1">Administrador</option>
                   <option value="2">Supervisor</option>
                   <option value="3">Trabajador</option>
                 </Form.Control>
               </Form.Group>
-          </>
+            </>
           }
           <Form.Group className='mb-2'>
             <Form.Label>Nombres</Form.Label>
@@ -86,7 +101,7 @@ function StaffModal(props){
           </Form.Group>
           <Form.Group className='mb-2'>
             <Form.Label>DPI</Form.Label>
-            <Form.Control name="dpi" onChange={handle} defaultValue={inputs?.dpi} maxLength="13"/>
+            <Form.Control name="dpi" maxLength="13" onChange={handle} defaultValue={inputs?.dpi} />
           </Form.Group>
           <Form.Group className='mb-2'>
             <Form.Label>Email</Form.Label>
@@ -103,7 +118,6 @@ function StaffModal(props){
             } type="date"/>
           </Form.Group>
         </Modal.Body>
-
         <Modal.Footer>
           <Button type="submit">Guardar</Button>
         </Modal.Footer>

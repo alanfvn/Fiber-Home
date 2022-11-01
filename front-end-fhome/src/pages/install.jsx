@@ -8,7 +8,8 @@ import { Container, Badge } from "react-bootstrap";
 function Installation(){
 
   const [modal,setModal] = React.useState(false)
-  const data = []
+  const [installs, setInstalls] = React.useState([])
+  const [install, setCurrentInstall] = React.useState()
 
   const columns = [
     {
@@ -36,17 +37,12 @@ function Installation(){
   ];
 
 
-  for(let i =0; i< 1005; i++){
-    data[i] = {id: i, title: `p: ${i}`, year: '1900'}
-  }
-
   return (
     <div className="layout">
       <CustomNavbar/>
       <main>
         <InstallModal show={modal} onHide={()=>setModal(false)}/>
         <Container className="mt-5 mb-5">
-
           <div className="d-flex mb-4">
             <input className="form-control rounded-0" type="search" placeholder="Buscar instalaciones.." aria-label="Search"/>
           </div>
@@ -54,10 +50,9 @@ function Installation(){
             <input className="form-check-input" id="instalaciones" type="checkbox"/>
             <label className="form-check-label" htmlFor="instalaciones">Instalaciones no programadas</label>
           </div>
-
           <DataTable
             columns={columns}
-            data={data}
+            data={installs}
             pagination
             />
         </Container>

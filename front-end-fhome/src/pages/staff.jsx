@@ -2,15 +2,15 @@ import CustomNavbar from "./components/navbar"
 import CustomFooter from './components/footer'
 import DataTable from 'react-data-table-component';
 import UserModal from './modals/user-modal'
+import Permission from "./components/permission";
 import HttpMan from "../util/http-man";
 import { Container, Badge } from "react-bootstrap";
-import {useState, useEffect} from "react";
-import { get_group, get_token } from "../util/cookie-man";
-import { get_group_name} from '../util/groups'
+import { useState, useEffect } from "react";
+import { get_token } from "../util/cookie-man";
+import { get_group_name } from '../util/groups'
 
 function Staff(){
 
-  const group = get_group()
   const token = get_token()
   const [search, setSearch] = useState()
   const [users, setUsers] = useState([])
@@ -47,7 +47,6 @@ function Staff(){
         }
         deleteUser(row.user_id).then(()=>{
           setSearch()
-          
         })
       }} className="btn btn-danger fa-solid fa-trash"/>,
     },
@@ -71,24 +70,19 @@ function Staff(){
 
   const deleteUser = async (uid) =>{
     try{
-      const resp = await HttpMan.delete('/user/delete', {
-        headers: {
-          'Authorization': token
-        },
-        data:{
-          uid
-        }
+       await HttpMan.delete('/user/delete', {
+        headers: { 'Authorization': token },
+        data: { uid }
       })
     }catch(e){
       console.log(`Error when trying to delete the user ${e}`)
     }
   }
 
+  //search
   useEffect(()=>{
-    const delay = setTimeout(()=>{
-      console.log(search)
-    }, 500)
-    return ()=>clearTimeout(delay)
+    const delay = setTimeout(()=>fetchStaff(), 500)
+    return () => clearTimeout(delay)
   },[search])
 
 
@@ -101,32 +95,20 @@ function Staff(){
       <CustomNavbar/>
       <main>
         <Container className="mt-5 mb-5">
-          {
-          group === "1" ?
-            <>
-              {user && <UserModal show={user} onHide={()=>setCurrentUser(null)}/>}
-              <div className="d-flex px-0 mb-4">
-                <input className="form-control rounded-0" type="search" onChange={(e)=>setSearch(e.target.value)} placeholder="Buscar personal.."/>
-              </div>
-              <DataTable
-                columns={columns}
-                data={users}
-                pagination
-                />
-              <div className="mt-3">
-                <a className="btn btn-success fas-fa fa-plus rounded-0" onClick={()=>setCurrentUser({})}> Agregar personal</a>
-              </div>
-            </>
-            :
-            <>
-              <div className="alert alert-warning" role="alert">
-                <h4 className="alert-heading">Error</h4>
-                <p>No tienes permiso para acceder a este apartado.</p>
-                <hr />
-                <p className="mb-0">Si consideras que esto es un error ponte en contacto con la administración.</p>
-              </div>
-            </>
-        }
+          {user && <UserModal show={user} onHide={()=>setCurrentUser(null)}/>}
+          <Permission group_access={[1]}>
+            <div className="d-flex px-0 mb-4">
+              <input className="form-control rounded-0" type="search" onChange={(e)=>setSearch(e.target.value)} placeholder="Buscar personal.."/>
+            </div>
+            <DataTable
+              columns={columns}
+              data={users}
+              pagination
+              />
+            <div className="mt-3">
+              <a className="btn btn-success fas-fa fa-plus rounded-0" onClick={()=>setCurrentUser({})}> Agregar personal</a>
+            </div>
+          </Permission>
         </Container>
       </main>
       <CustomFooter/>

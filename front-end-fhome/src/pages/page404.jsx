@@ -8,7 +8,7 @@ function Page404() {
       <main className='d-flex'>
         <div className="w-100 flex-column d-flex align-items-center justify-content-center">
           <h1>404</h1>
-          <h1>Page not found!</h1>
+          <h2>Page not found!</h2>
         </div>
       </main>
       <CustomFooter/>

@@ -65,15 +65,19 @@ language plpgsql
 as $$
 declare
 -- variable declaration
+
 begin
+	--verify pass status
+	if coalesce(user_pass, '') <> '' then
+		user_pass := crypt(user_pass, gen_salt('bf', 4));
+	end if;
 	
 	begin
-		
 		if exists(select 1 from tb_users where lower(user_name) = lower(user_n)) then
 			-- user exists update it.
 			update tb_users set 
 			user_group = user_g,
-			user_password = crypt(user_pass, gen_salt('bf', 4)),
+			user_password = coalesce(user_pass, user_password),
 			names = user_fname, surnames = user_lname,
 			phone = user_phone, dpi = user_dpi,
 			email = user_email, address = user_address,
@@ -103,7 +107,7 @@ begin
 	exception when others then
 		log_data := SQLERRM; 
 	end; 
-	
+
 end; $$
 
 --functions
@@ -128,6 +132,15 @@ end;
 $$ language plpgsql
 
 
+--vistas
+create view users as
+(
+	select user_id, user_name, user_group,
+	names, surnames, phone, dpi, email, address,
+	date_of_birth from tb_users
+);
+
+
 
 
 
@@ -140,8 +153,7 @@ BEGIN
       'alan', 2, 'alan123', 
       'Alan David', 'Gonzalez Lopez', '20204040', 
       '28790000101', 'alan@gmail.com', 
-      '1a calle coban a.v', '2000-09-24', log_d
-    );
+      '1a calle coban a.v', '2000-09-24', log_d);
     RAISE NOTICE 'resp: %', log_d;
 END
 $$

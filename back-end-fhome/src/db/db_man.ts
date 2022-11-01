@@ -43,11 +43,10 @@ async function get_users(search: string, staff: boolean){
   let client
   let data
 
-  let query = `select * from tb_users 
+  let query = `select * from users 
 where user_group ${staff ? "!=" : "="} 4 
 and (user_name = coalesce($1, user_name) 
 or concat(names,' ', surnames) ilike concat('%', $1, '%'));` 
-
   try{
     client = await conPool.connect()
     data = await client.query(query, [search]);

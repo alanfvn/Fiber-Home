@@ -1,22 +1,21 @@
-import {Container,Form, Button} from 'react-bootstrap'
-import React from 'react'
 import HttpMan from '../util/http-man'
+import { Form, Button } from 'react-bootstrap'
+import { useState } from 'react'
 import { set_cookies } from '../util/cookie-man'
 import { useNavigate } from 'react-router-dom'
 
 
 function Login(){
 
-  const [data, setData] = React.useState({})
-  const [loading, setLoading] = React.useState(false)
+  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState({})
   const nav = useNavigate()
 
   //login function
-  const login = async (user, pass)=>{
+  const login = async ()=>{
     let resp_data
-
     try{
-      const resp = await HttpMan.post('/auth/login', {user, pass});
+      const resp = await HttpMan.post('/auth/login', data);
       resp_data = resp.data
     }catch(er){
       console.log(`ERROR ${er}`)
@@ -33,13 +32,13 @@ function Login(){
   //handle submit
   const submit = (e) => {
     e.preventDefault();
-    const {username, pass} = data || {};
-    if(!username || !pass){
+    const {user, pass} = data 
+    if(!user || !pass){
       alert('Por favor ingresa todos los campos')
       return
     }
     setLoading(true)
-    login(username,pass).then(data=>{
+    login().then(data=>{
       if(!data){
         alert('No hemos podido autenticarte verifica tus credenciales')
         return
@@ -58,17 +57,17 @@ function Login(){
         <Form onSubmit={submit}>
           <Form.Group className='mb-3'>
             <Form.Label>Usuario:</Form.Label>
-            <Form.Control name='username' disabled={loading} onChange={handleInput}/>
+            <Form.Control name='user' disabled={loading} onChange={handleInput}/>
           </Form.Group>
           <Form.Group className='mb-4'>
             <Form.Label>Contraseña:</Form.Label>
             <Form.Control name='pass' type='password' disabled={loading} onChange={handleInput}/>
           </Form.Group>
             <Button className='btn-block' type='submit' disabled={loading} >
-            {
-             loading 
-              ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 
-              : "Iniciar sesión"
+            {loading ? 
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 
+              : 
+              "Iniciar sesión"
             }
           </Button>
         </Form>
