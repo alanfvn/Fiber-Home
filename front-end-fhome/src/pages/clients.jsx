@@ -13,7 +13,10 @@ function Clients(){
   const [search, setSearch] = useState()
   const [users, setUsers] = useState([])
   const [user, setCurrentUser] = useState()
+  const [fetch, setFetch] = useState(true)
+  const triggerFetch = () => setFetch(t => !t)
 
+  //endpoints
   const fetchClients = async () =>{
     try{
       const resp = await HttpMan.get('/user/client_list', {
@@ -23,6 +26,17 @@ function Clients(){
       setUsers(resp.data)
     }catch(e){
       console.log(`Fetch client error: ${e}`)
+    }
+  }
+
+  const deleteUser = async (uid) =>{
+    try{
+       await HttpMan.delete('/user/delete', {
+        headers: { 'Authorization': token },
+        data: { uid }
+      })
+    }catch(e){
+      console.log(`Error when trying to delete the user ${e}`)
     }
   }
 
@@ -52,19 +66,31 @@ function Clients(){
         if(!window.confirm("De verdad deseas borrar?")){
           return
         }
+        deleteUser(row.user_id).then(()=>triggerFetch())
       }} className="btn btn-danger fa-solid fa-trash"/>,
     },
   ];
 
+
+  //search
+  useEffect(()=>{
+    const delay = setTimeout(()=>fetchClients(), 500)
+    return () => clearTimeout(delay)
+  },[search])
+
+  //fetch clients
   useEffect(()=>{
     fetchClients()
-  }, [])
+  }, [fetch])
 
   return (
     <div className="layout">
       <CustomNavbar/>
       <main>
-        {user && <UserModal show={user} onHide={()=>setCurrentUser(null)}/>}
+        {user && <UserModal show={user} onHide={()=>{
+          triggerFetch()
+          setCurrentUser(null)
+        }}/>}
         <Container className="mt-5 mb-5">
           <Permission group_access={[1,2]}>
             <div className="d-flex px-0 mb-4">

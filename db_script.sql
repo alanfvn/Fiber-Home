@@ -94,7 +94,7 @@ begin
 			)
 			values(
 				user_n, user_g, 
-				crypt(user_pass, gen_salt('bf', 4)),
+				user_pass,
 				user_fname, user_lname,
 				user_phone, user_dpi, 
 				user_email, user_address,

@@ -15,7 +15,38 @@ function Staff(){
   const [search, setSearch] = useState()
   const [users, setUsers] = useState([])
   const [user, setCurrentUser] = useState()
+  const [fetch, setFetch] = useState(true)
+  const triggerFetch = () => setFetch(t => !t)
 
+  //endpoints
+  const fetchStaff = async () =>{
+    try{
+      const resp = await HttpMan.get('/user/staff_list', {
+        headers: {
+          'Authorization': token
+        },
+        params:{
+          'filter': search
+        }
+      });
+      setUsers(resp.data)
+    }catch(e){
+      console.log(`Fetch client error: ${e}`)
+    }
+  }
+
+  const deleteUser = async (uid) =>{
+    try{
+       await HttpMan.delete('/user/delete', {
+        headers: { 'Authorization': token },
+        data: { uid }
+      })
+    }catch(e){
+      console.log(`Error when trying to delete the user ${e}`)
+    }
+  }
+
+  //data table
   const columns = [
     {
       name: 'Id',
@@ -45,39 +76,10 @@ function Staff(){
         if(!window.confirm("De verdad deseas borrar?")){
           return
         }
-        deleteUser(row.user_id).then(()=>{
-          setSearch()
-        })
+        deleteUser(row.user_id).then(()=>triggerFetch())
       }} className="btn btn-danger fa-solid fa-trash"/>,
     },
   ];
-
-  const fetchStaff = async () =>{
-    try{
-      const resp = await HttpMan.get('/user/staff_list', {
-        headers: {
-          'Authorization': token
-        },
-        params:{
-          'filter': search
-        }
-      });
-      setUsers(resp.data)
-    }catch(e){
-      console.log(`Fetch client error: ${e}`)
-    }
-  }
-
-  const deleteUser = async (uid) =>{
-    try{
-       await HttpMan.delete('/user/delete', {
-        headers: { 'Authorization': token },
-        data: { uid }
-      })
-    }catch(e){
-      console.log(`Error when trying to delete the user ${e}`)
-    }
-  }
 
   //search
   useEffect(()=>{
@@ -85,17 +87,20 @@ function Staff(){
     return () => clearTimeout(delay)
   },[search])
 
-
+  //fetch data
   useEffect(()=>{
     fetchStaff()
-  }, [])
+  }, [fetch])
 
   return (
     <div className="layout">
       <CustomNavbar/>
       <main>
         <Container className="mt-5 mb-5">
-          {user && <UserModal show={user} onHide={()=>setCurrentUser(null)}/>}
+          {user && <UserModal show={user} onHide={()=>{
+            triggerFetch()
+            setCurrentUser(null)
+          }}/>}
           <Permission group_access={[1]}>
             <div className="d-flex px-0 mb-4">
               <input className="form-control rounded-0" type="search" onChange={(e)=>setSearch(e.target.value)} placeholder="Buscar personal.."/>

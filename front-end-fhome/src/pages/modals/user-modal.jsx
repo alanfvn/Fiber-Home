@@ -13,12 +13,12 @@ function StaffModal(props){
   const editing = Object.keys(show).length !== 0 //si el objeto no esta vacio estamos editando
   const staff = (show?.user_group ?? 1) <= 3 //si el id de grupo es > 3 estamos editando cliente
 
-  const saveData = async () =>{
+  const saveData = async (user) =>{
+    const {...data} = user
     try{
-      const resp = await HttpMan.post('/user/upsert', inputs, {
+      await HttpMan.post('/user/upsert', data, {
         headers: { Authorization: token }
       }); 
-      console.log(resp.data)
     }catch(err){
       console.log(err)
     }
@@ -50,7 +50,7 @@ function StaffModal(props){
       setError(errors)
       return
     }
-    saveData().then(()=>{
+    saveData(user).then(()=>{
       closeModal()
     })
   }

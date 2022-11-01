@@ -38,12 +38,13 @@ users.post('/upsert', async (req,res)=>{
     date_of_birth 
   } = req.body || {}
 
-  if(!user_name || !user_group || !user_password || 
+  if(!user_name || !user_group || 
     !names || !surnames || !phone || 
     !dpi || !email || !address || !date_of_birth) {
     res.status(400).send("Invalid request you must specify all parameters")
     return
   }
+
   const user = new User({
     user_name, user_group, user_password, 
     names, surnames, phone,dpi,
