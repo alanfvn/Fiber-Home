@@ -29,7 +29,8 @@ function is_user_auth(){
 }
 
 function get_token(){
-  return `Bearer ${cookies.get('jwt')}`
+  const token = cookies.get('jwt')
+  return token ? `Bearer ${token}` : null
 }
 
 function get_group(){

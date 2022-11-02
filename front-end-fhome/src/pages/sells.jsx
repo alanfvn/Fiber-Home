@@ -4,13 +4,22 @@ import DataTable from 'react-data-table-component';
 import SellModal from "./modals/sell-modal";
 import { Container, Badge } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { get_token } from "../util/cookie-man";
 
 function Sells(){
-  const token = get_token()
+
+  const [query, setQuery] = useState({})
   const [sells, setSells] = useState([])
   const [sell, setCurrentSell] = useState()
+  const [fetch, setFetch] = useState(false)
+  const triggerFetch = () => setFetch(t => !t)
 
+
+
+  const handleQuery = (e) =>{
+    const {name, value, checked} = e.target
+    const val = name === "not_programmed" ? checked : value
+    setQuery({...query, [name]: val})
+  }
 
   const columns = [
     {
@@ -41,10 +50,15 @@ function Sells(){
   ];
 
 
+  useEffect(()=>{
+    console.log(query)
+    // const delay = setTimeout(()=>fetchStaff(), 500)
+    // return () => clearTimeout(delay)
+  },[query])
+
   //useEffect
   useEffect(()=>{
-
-  },[])
+  },[fetch])
 
   return (
     <div className="layout">
@@ -53,14 +67,10 @@ function Sells(){
         <Container className="mt-5 mb-5">
           { sell && <SellModal show={sell} onHide={()=>setCurrentSell(null)}/> }
           <div className="d-flex mb-4">
-            <input className="form-control rounded-0 w-75" type="search" placeholder="Buscar ventas.." aria-label="Search"/>
-          </div>
-          <div className="d-flex mb-4">
-            <input className="form-control rounded-0 w-25" type="date"/>
-            <input className="form-control rounded-0 w-25" type="date"/>
+            <input name="filter" onChange={handleQuery} className="form-control rounded-0" type="search" placeholder="Buscar ventas.." aria-label="Search"/>
           </div>
           <div className="form-check mb-4">
-            <input className="form-check-input" id="instalaciones" type="checkbox"/>
+            <input name="not_programmed" onChange={handleQuery} className="form-check-input" id="instalaciones" type="checkbox"/>
             <label className="form-check-label" htmlFor="instalaciones">Instalaciones no programadas</label>
           </div>
           <DataTable

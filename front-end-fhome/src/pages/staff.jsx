@@ -6,12 +6,10 @@ import Permission from "./components/permission";
 import HttpMan from "../util/http-man";
 import { Container, Badge } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { get_token } from "../util/cookie-man";
 import { get_group_name } from '../util/groups'
 
 function Staff(){
 
-  const token = get_token()
   const [search, setSearch] = useState()
   const [users, setUsers] = useState([])
   const [user, setCurrentUser] = useState()
@@ -22,12 +20,7 @@ function Staff(){
   const fetchStaff = async () =>{
     try{
       const resp = await HttpMan.get('/user/staff_list', {
-        headers: {
-          'Authorization': token
-        },
-        params:{
-          'filter': search
-        }
+        params: { 'filter': search }
       });
       setUsers(resp.data)
     }catch(e){
@@ -37,10 +30,7 @@ function Staff(){
 
   const deleteUser = async (uid) =>{
     try{
-       await HttpMan.delete('/user/delete', {
-        headers: { 'Authorization': token },
-        data: { uid }
-      })
+       await HttpMan.delete('/user/delete', { data: { uid } })
     }catch(e){
       console.log(`Error when trying to delete the user ${e}`)
     }

@@ -6,10 +6,8 @@ import HttpMan from '../util/http-man'
 import Permission from "./components/permission";
 import { Container } from "react-bootstrap";
 import { useEffect, useState} from "react";
-import { get_token } from "../util/cookie-man";
 
 function Clients(){
-  const token = get_token()
   const [search, setSearch] = useState()
   const [users, setUsers] = useState([])
   const [user, setCurrentUser] = useState()
@@ -20,7 +18,6 @@ function Clients(){
   const fetchClients = async () =>{
     try{
       const resp = await HttpMan.get('/user/client_list', {
-        headers: { 'Authorization': token },
         params: { 'filter': search }
       });
       setUsers(resp.data)
@@ -32,7 +29,6 @@ function Clients(){
   const deleteUser = async (uid) =>{
     try{
        await HttpMan.delete('/user/delete', {
-        headers: { 'Authorization': token },
         data: { uid }
       })
     }catch(e){

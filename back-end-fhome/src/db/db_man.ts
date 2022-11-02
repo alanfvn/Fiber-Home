@@ -6,7 +6,7 @@ const conPool = new Pool({
   ssl: {
     rejectUnauthorized: false
   }
-});
+})
 
 async function login(user: string, pass: string){
   let data
@@ -25,7 +25,6 @@ async function login(user: string, pass: string){
 async function upsert_user(user: User){
   let client 
   let data
-
   const params = [...Object.values(user), '']
 
   try{
@@ -46,10 +45,10 @@ async function get_users(search: string, staff: boolean){
   let query = `select * from users 
 where user_group ${staff ? "!=" : "="} 4 
 and (user_name = coalesce($1, user_name) 
-or concat(names,' ', surnames) ilike concat('%', $1, '%'));` 
+or concat(names,' ', surnames) ilike $1);` 
   try{
     client = await conPool.connect()
-    data = await client.query(query, [search]);
+    data = await client.query(query, [`%${search}%`]);
   }catch(e){
     console.log(`Error ${e}`)
   }finally{
@@ -74,4 +73,53 @@ async function delete_user(uid: number){
   return data
 }
 
-export { login, upsert_user, get_users, delete_user}
+// sells
+async function create_sell(seller: number, start: Date, end: Date,user: User){
+  let client
+  let data 
+  const params = [seller, start, end, ...Object.values(user), '']
+
+  try{
+    client = await conPool.connect()
+    data = await client.query('call create_sell($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)', params)
+  }catch(e){
+    console.log(`ERROR Creating sell: ${e}`)
+  }finally{
+    client?.release()
+  }
+  return data?.rows[0]
+}
+
+async function get_sells(search: string, unprogrammed: boolean){
+  let client 
+  let data
+  let query = `select * from sells where 
+seller_id = 14 and 
+install_worker is null and
+(seller ilike $1 or client ilike $1);
+`
+  try{
+    client = await conPool.connect()
+    data = await client.query('select * from sells')
+  }catch(e){
+    console.log(`ERROR getting sells: ${e}`)
+  }finally{
+    client?.release()
+  }
+  return data
+}
+
+async function delete_sell(id: number){
+  let client 
+  try{
+    client = await conPool.connect()
+    await client.query('delete from tb_sells where sell_id $1', [id])
+  }catch(e){
+    console.log(`ERROR getting sells: ${e}`)
+  }finally{
+    client?.release()
+  }
+}
+
+
+export { login, upsert_user, get_users, delete_user, get_sells, create_sell}

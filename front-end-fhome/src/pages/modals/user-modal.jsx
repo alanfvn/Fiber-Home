@@ -3,11 +3,9 @@ import HttpMan from '../../util/http-man'
 import User from '../../models/user'
 import { Modal, Button, Alert } from 'react-bootstrap'
 import { useState } from 'react'
-import { get_token } from '../../util/cookie-man'
 
 function StaffModal(props){
 
-  const token = get_token()
   const {show, onHide} = props;
   const [error, setError] = useState()
   const [inputs, setInputs] = useState(show)
@@ -17,9 +15,7 @@ function StaffModal(props){
   const saveData = async (user) =>{
     const {...data} = user
     try{
-      await HttpMan.post('/user/upsert', data, {
-        headers: { Authorization: token }
-      }); 
+      await HttpMan.post('/user/upsert', data); 
     }catch(err){
       console.log(err)
     }
