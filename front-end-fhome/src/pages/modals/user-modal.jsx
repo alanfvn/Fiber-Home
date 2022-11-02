@@ -57,6 +57,7 @@ function StaffModal(props){
       size="lg"
       show={show}
       onHide={closeModal}
+      centered
     >
       <Modal.Header closeButton>
         <Modal.Title>Usuario</Modal.Title>

@@ -268,6 +268,23 @@ create view sells as
   left join tb_users as installer on tb_installations.install_worker = installer.user_id
 );
 
+create view installs as 
+(	
+	select 
+	tb_installations.install_sell, 
+	tb_sells.contract_uid, 
+	tb_installations.install_date,
+	client.user_name as client,
+	tb_installations.install_worker,
+	worker.user_name as worker
+
+	from tb_installations
+	inner join tb_sells on tb_installations.install_sell = tb_sells.sell_id
+	inner join tb_users as client on tb_sells.client_id = client.user_id
+	inner join tb_users as worker on tb_installations.install_worker = worker.user_id
+);
+
+
 -- PRUEBAS
 DO
 $$

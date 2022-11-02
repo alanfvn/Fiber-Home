@@ -1,38 +1,54 @@
+import AsyncSelect from 'react-select/async';
+import HttpMan from '../../util/http-man'
 import {Modal, Form, Button, Alert} from 'react-bootstrap'
-import React from 'react'
-import Select from 'react-select'
+import {useState} from 'react'
+import { get_group } from '../../util/cookie-man';
 
 function InstallModal(props){
 
-  const [error, setError] = React.useState()
-  const [inputs, setInputs] = React.useState({})
+  const admin = get_group() >= 2
   const {show, onHide} = props;
+  const [inputs, setInputs] = useState({})
+  const [installs, setInstalls] = useState([])
+
+  //requests
+  // const 
+  const updateInstall = async (install) =>{
+    try{
+      const resp = await HttpMan.post('/installs/upsert', install)
+    }catch(e){
+      console.log(`Error on install update: ${e}`)
+    }
+  }
+
+  const getStaff = async (filter)=>{
+    let data
+    try{
+      const resp = await HttpMan.get('/user/staff_names', {params: { filter }})
+      data = resp.data.map(x => ({value: x.uid, label: x.username}))
+    }catch(e){
+      console.log(`Error when trying to get the staff: ${e}`)
+    }
+    return data
+  }
 
   const closeModal = () =>{
     setInputs({})
-    setError()
     onHide()
   }
 
-  const handle = (e) =>{
+  const handleInputs = (e) =>{
     const {name, value} = e.target
-    setError(null)
     setInputs({...inputs, [name]: value})
   }
 
+  const handleSelect = (e) =>{
+  }
 
   const submit = (e) => {
     e.preventDefault()
-
-    //guardado exitoso
     closeModal()
   }
-
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-  ];
 
   return (
     <Modal 
@@ -45,38 +61,34 @@ function InstallModal(props){
         <Modal.Title>Instalacion</Modal.Title>
       </Modal.Header>
 
-      <Form onSubmit={submit}>
+      <form onSubmit={submit}>
         <Modal.Body>
-          { error && <Alert variant='danger'>{error}</Alert> }
-          <Form.Group className='mb-2'>
-            <Form.Label>UID Contrato</Form.Label>
-            <Form.Control value="" disabled/>
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Cliente</Form.Label>
-            <Form.Control value="" disabled/>
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Fecha Instalacion</Form.Label>
-            <Form.Control  type='date'/>
-          </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Instalador designado</Form.Label>
-            <Select
-              // defaultValue={"alan"}
-              isLoading={true}
-              isClearable={true}
-              isSearchable={true}
-              name="installer"
-              options={options}
-              />
-          </Form.Group>
+          <div className="row mb-3">
+            <div className="col-6">
+              <label>UID Contrato</label>
+              <input className='form-control' disabled/>
+            </div>
+            <div className="col-6">
+              <label>Cliente</label>
+              <input className='form-control' disabled/>
+            </div>
+          </div>
+          <div className="row mb-3">
+            <div className="col-6">
+              <label>Instalador designado</label>
+              <AsyncSelect/>
+            </div>
+            <div className="col-6">
+              <label>Fecha de instalacion</label>
+              <input className='form-control' type="date"/>
+            </div>
+          </div>
         </Modal.Body>
 
         <Modal.Footer>
           <Button type="submit">Guardar</Button>
         </Modal.Footer>
-      </Form>
+      </form>
     </Modal>
   )
 }

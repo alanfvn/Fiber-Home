@@ -2,14 +2,25 @@ import CustomNavbar from "./components/navbar"
 import CustomFooter from './components/footer'
 import DataTable from 'react-data-table-component';
 import InstallModal from "./modals/install-modal";
-import React from "react";
-import { Container, Badge } from "react-bootstrap";
+import {useState, useEffect } from "react";
+import { Container, Badge, Alert} from "react-bootstrap";
+import HttpMan from "../util/http-man";
 
 function Installation(){
 
-  const [modal,setModal] = React.useState(false)
-  const [installs, setInstalls] = React.useState([])
-  const [install, setCurrentInstall] = React.useState()
+  const [modal,setModal] = useState()
+  const [query, setQuery] = useState({})
+  const [installs, setInstalls] = useState([{}])
+  const [install, setCurrentInstall] = useState()
+
+  //requests
+  const getInstalls = async ()=>{
+    try{
+      await HttpMan.get('/installs/list',{params: {}})
+    }catch(e){
+      console.log(`Error when trying to get installs ${e}`)
+    }
+  }
 
   const columns = [
     {
@@ -26,21 +37,31 @@ function Installation(){
     },
     {
       name: 'Instalcion realizada',
-      selector: row =><Badge variant={row.year ? "danger" : "success"} text="light">No programada</Badge> 
+      selector: row =><Badge bg={row.install_worker ? "success" : "danger"} text="light">
+        {row.install_worker ? "Realizada" : "No realizada"}
+      </Badge> 
     },
     {
       name: 'Visualizar',
-      selector: row => <button onClick={()=>{setModal(true)}} className="btn btn-info fa-solid fa-clipboard-list"/>
+      selector: row => 
+        <button onClick={()=>{
+          // setCurrentSell(sells.find(x => x.sell_id === row.sell_id))
+      }} className="btn btn-primary">
+        <i className="fa-solid fa-clipboard-list"/>
+      </button>
     },
   ];
-
 
   return (
     <div className="layout">
       <CustomNavbar/>
       <main>
-        <InstallModal show={modal} onHide={()=>setModal(false)}/>
+        <InstallModal show={modal} onHide={()=>setModal(null)}/>
         <Container className="mt-5 mb-5">
+          <div className="alert alert-warning mb-5" role="alert">
+            <h4 className="alert-heading">Instalaciones pendientes</h4>
+            <p className="mb-0">Tienes 5 instalaciones pendientes.</p>
+          </div>
           <div className="d-flex mb-4">
             <input className="form-control rounded-0" type="search" placeholder="Buscar instalaciones.." aria-label="Search"/>
           </div>
