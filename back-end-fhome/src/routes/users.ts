@@ -1,7 +1,7 @@
 import express from 'express' 
 import User from '../models/user'
 import { verifyToken } from '../jwt/jwt-man'
-import { upsert_user, delete_user, get_users } from '../db/db_man'
+import { upsert_user, delete_user, get_users, search_staff } from '../db/db_man'
 import { isAdmin, isSupervisor } from '../util/perms'
 
 const users = express.Router()
@@ -38,6 +38,12 @@ users.get('/client_list', async (req, res)=>{
   }
   const query = `${req.query.filter||''}`
   const data = await get_users(query, false);
+  res.json(data)
+})
+
+users.get('/staff_names', async (req, res)=>{
+  const search = `${req.query.filter||''}`
+  const data = await search_staff(search)
   res.json(data)
 })
 

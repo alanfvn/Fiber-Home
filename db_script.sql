@@ -47,7 +47,10 @@ create table tb_installations(
   install_worker int,
 
   constraint fk_installation1 foreign key(install_worker)
-  references tb_users(user_id) on delete cascade
+  references tb_users(user_id) on delete cascade,
+
+  constraint fk_installation2 foreign key(install_sell)
+  references tb_sells(sell_id) on delete cascade
 );
 
 --procedimientos
@@ -206,6 +209,7 @@ end; $$
 
 
 --functions
+-- auth user
 create function auth_user(uname text, upass text)
 returns table(
 	uid int,
@@ -226,6 +230,20 @@ begin
 end; 
 $$ language plpgsql
 
+-- search staff 
+create function search_staff(search_query text)
+returns table(
+	uid int,
+	username text
+)
+as $$
+begin
+	return query (
+		select user_id, user_name from tb_users where user_group <= 3 
+		and user_name ilike concat('%', search_query, '%') limit 10
+	);
+end; 
+$$ language plpgsql
 
 --vistas
 create view users as
@@ -241,13 +259,14 @@ create view sells as
   tb_sells.sell_date, tb_sells.contract_uid, 
   seller.user_name as seller, 
   client.user_name as client,
+  installer.user_name as installer,
   tb_installations.install_worker
   from tb_sells 
   inner join tb_users as seller on tb_sells.seller_id = seller.user_id
   inner join tb_users as client on tb_sells.client_id = client.user_id
   left join tb_installations on tb_sells.sell_id = tb_installations.install_sell
+  left join tb_users as installer on tb_installations.install_worker = installer.user_id
 );
-
 
 -- PRUEBAS
 DO

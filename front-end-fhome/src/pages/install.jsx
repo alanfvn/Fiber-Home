@@ -46,7 +46,7 @@ function Installation(){
           </div>
           <div className="form-check mb-4">
             <input className="form-check-input" id="instalaciones" type="checkbox"/>
-            <label className="form-check-label" htmlFor="instalaciones">Instalaciones no programadas</label>
+            <label className="form-check-label" htmlFor="instalaciones">Instalaciones no realizadas</label>
           </div>
           <DataTable
             columns={columns}
@@ -61,4 +61,3 @@ function Installation(){
 }
 
 export default Installation
-

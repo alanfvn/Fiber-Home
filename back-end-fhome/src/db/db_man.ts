@@ -1,4 +1,5 @@
 import {Pool} from 'pg'
+import Install from '../models/install'
 import User from '../models/user'
 
 const conPool = new Pool({
@@ -8,6 +9,7 @@ const conPool = new Pool({
   }
 })
 
+//functions
 async function login(user: string, pass: string){
   let data
   let client 
@@ -22,6 +24,22 @@ async function login(user: string, pass: string){
   return data?.rows[0]
 }
 
+async function search_staff(query: string){
+  let data
+  let client 
+  try{
+    client = await conPool.connect()
+    data = await client.query("select * from search_staff($1)", [query])
+  }catch(e){
+    console.log(`Search error: ${e}`)
+  }finally{
+    client?.release()
+  }
+  return data?.rows
+}
+
+
+//users
 async function upsert_user(user: User){
   let client 
   let data
@@ -77,11 +95,11 @@ async function delete_user(uid: number){
 async function create_sell(seller: number, start: Date, end: Date,user: User){
   let client
   let data 
-  const params = [seller, start, end, ...Object.values(user), '']
+  const params = [seller, start, end, ...Object.values(user), null]
 
   try{
     client = await conPool.connect()
-    data = await client.query('call create_sell($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)', params)
+    data = await client.query('call create_sell($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14::uuid)', params)
   }catch(e){
     console.log(`ERROR Creating sell: ${e}`)
   }finally{
@@ -93,33 +111,47 @@ async function create_sell(seller: number, start: Date, end: Date,user: User){
 async function get_sells(search: string, unprogrammed: boolean){
   let client 
   let data
-  let query = `select * from sells where 
-seller_id = 14 and 
-install_worker is null and
-(seller ilike $1 or client ilike $1);
-`
+  let query = `select * from sells where ${unprogrammed ? "install_worker is null and " : ""}(seller ilike $1 or client ilike $1)`
   try{
     client = await conPool.connect()
-    data = await client.query('select * from sells')
+    data = await client.query(query, [`%${search}%`])
   }catch(e){
     console.log(`ERROR getting sells: ${e}`)
   }finally{
     client?.release()
   }
-  return data
+  return data?.rows
 }
 
 async function delete_sell(id: number){
   let client 
   try{
     client = await conPool.connect()
-    await client.query('delete from tb_sells where sell_id $1', [id])
+    await client.query('delete from tb_sells where sell_id = $1', [id])
   }catch(e){
     console.log(`ERROR getting sells: ${e}`)
   }finally{
     client?.release()
   }
 }
+//installs
+async function upsert_install(idata: Install){
+  let client 
+  let data
+  const params = [...Object.values(idata), null]
+  try{
+    client = await conPool.connect()
+    data = await client.query('call upsert_install($1, $2, $3, $4)', params) 
+  }catch(e){
+    console.log(`Error upsert install ${e}`)
+  }finally{
+    client?.release()
+  }
+  return data?.rows[0]
+}
 
+async function get_installs(user: number, query: string, not_done: boolean){
 
-export { login, upsert_user, get_users, delete_user, get_sells, create_sell}
+}
+
+export { login, upsert_user, get_users, delete_user, get_sells, create_sell, delete_sell, search_staff, upsert_install, get_installs}

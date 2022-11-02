@@ -34,7 +34,7 @@ function get_token(){
 }
 
 function get_group(){
-  return cookies.get('gid') ?? -1
+  return cookies.get('gid') ?? 99
 }
 
 export {clean_cookies, set_cookies, is_user_auth, get_token, get_group}
