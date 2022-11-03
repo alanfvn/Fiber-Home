@@ -1,4 +1,3 @@
-
 import HttpMan from '../../util/http-man'
 import User from '../../models/user'
 import { Modal, Button, Alert } from 'react-bootstrap'
@@ -65,7 +64,6 @@ function StaffModal(props){
       <form onSubmit={submit}>
         <Modal.Body>
           { error && <Alert variant='danger'>{error}</Alert> }
-
           <div className="row mb-3">
             <div className="col-6">
               <label>Usuario</label>

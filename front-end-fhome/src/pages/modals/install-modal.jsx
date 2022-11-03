@@ -1,21 +1,20 @@
 import AsyncSelect from 'react-select/async';
 import HttpMan from '../../util/http-man'
-import {Modal, Form, Button, Alert} from 'react-bootstrap'
-import {useState} from 'react'
-import { get_group } from '../../util/cookie-man';
+import {Modal, Button} from 'react-bootstrap'
+import { useState } from 'react'
+import { get_group, get_uid } from '../../util/cookie-man';
 
 function InstallModal(props){
 
-  const admin = get_group() >= 2
   const {show, onHide} = props;
-  const [inputs, setInputs] = useState({})
-  const [installs, setInstalls] = useState([])
+  const seller = get_group() >= 3 
+  const disabled = show?.install_worker != get_uid() && seller
+  const [inputs, setInputs] = useState(show)
 
   //requests
-  // const 
   const updateInstall = async (install) =>{
     try{
-      const resp = await HttpMan.post('/installs/upsert', install)
+      await HttpMan.post('/installs/upsert', install)
     }catch(e){
       console.log(`Error on install update: ${e}`)
     }
@@ -40,14 +39,23 @@ function InstallModal(props){
   const handleInputs = (e) =>{
     const {name, value} = e.target
     setInputs({...inputs, [name]: value})
+    console.log(inputs)
   }
 
-  const handleSelect = (e) =>{
+  const handleSelect = (e) => {
+    const {value} = e || {}
+    setInputs({...inputs, install_worker: value})
   }
 
   const submit = (e) => {
     e.preventDefault()
-    closeModal()
+    if(disabled){
+      closeModal()
+      return
+    }
+    const {install_sell, install_worker, install_date: date} = inputs
+    const install_date = !date ? null : date
+    updateInstall({install_sell, install_worker, install_date}).then(()=>closeModal())
   }
 
   return (
@@ -66,21 +74,32 @@ function InstallModal(props){
           <div className="row mb-3">
             <div className="col-6">
               <label>UID Contrato</label>
-              <input className='form-control' disabled/>
+              <input className='form-control' disabled defaultValue={inputs?.contract_uid}/>
             </div>
             <div className="col-6">
               <label>Cliente</label>
-              <input className='form-control' disabled/>
+              <input className='form-control' disabled defaultValue={inputs?.client}/>
             </div>
           </div>
           <div className="row mb-3">
             <div className="col-6">
               <label>Instalador designado</label>
-              <AsyncSelect/>
+              <AsyncSelect
+                onChange={handleSelect}
+                defaultValue={inputs?.install_worker ? {value: inputs?.install_worker, label: inputs?.worker} : null}
+                isDisabled={seller}
+                isClearable
+                loadOptions={getStaff}
+                />
             </div>
             <div className="col-6">
               <label>Fecha de instalacion</label>
-              <input className='form-control' type="date"/>
+              <input name="install_date" className='form-control' type="date" defaultValue={
+                inputs?.install_date ? new Date(inputs?.install_date).toLocaleDateString('en-CA') : null
+              }
+                onChange={handleInputs}
+                disabled={disabled}
+                />
             </div>
           </div>
         </Modal.Body>

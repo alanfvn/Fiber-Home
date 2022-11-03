@@ -271,6 +271,7 @@ create view sells as
 create view installs as 
 (	
 	select 
+	tb_installations.install_id, 
 	tb_installations.install_sell, 
 	tb_sells.contract_uid, 
 	tb_installations.install_date,

@@ -2,7 +2,7 @@
 import express from 'express' 
 import Install from '../models/install'
 import { verifyToken } from '../jwt/jwt-man'
-import { upsert_install } from '../db/db_man'
+import { get_installs, upsert_install } from '../db/db_man'
 
 const installs = express.Router()
 
@@ -21,8 +21,9 @@ installs.use((req, res, next)=>{
 installs.get('/list', async (req, res)=>{
   const { filter, not_done } =  req.query 
   const search = `${filter||''}`
-  const no_prog = not_done === "true"
-  res.json({})
+  const no_done = not_done === "true"
+  const installs = await get_installs(search, no_done)
+  res.json(installs)
 })
 
 //update 
@@ -33,6 +34,7 @@ installs.post('/upsert', async (req,res)=>{
     res.status(400).send("Invalid request you must specify the sell id")
     return 
   }
+  console.log(data)
   const {log_text}= await upsert_install(install) || {}
   res.json({message: log_text})
 })

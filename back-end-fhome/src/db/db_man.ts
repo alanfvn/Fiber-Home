@@ -150,8 +150,19 @@ async function upsert_install(idata: Install){
   return data?.rows[0]
 }
 
-async function get_installs(user: number, query: string, not_done: boolean){
-
+async function get_installs(search: string, not_done: boolean){
+  let client 
+  let data
+  let query = `select * from installs where ${not_done ? "install_date is null and " : ""}(worker ilike $1)`
+  try{
+    client = await conPool.connect()
+    data = await client.query(query, [`%${search}%`])
+  }catch(e){
+    console.log(`ERROR getting installations: ${e}`)
+  }finally{
+    client?.release()
+  }
+  return data?.rows
 }
 
 export { login, upsert_user, get_users, delete_user, get_sells, create_sell, delete_sell, search_staff, upsert_install, get_installs}

@@ -5,8 +5,10 @@ import SellModal from "./modals/sell-modal";
 import HttpMan from "../util/http-man";
 import { Container, Badge } from "react-bootstrap";
 import { useState, useEffect } from "react";
+import { get_group } from "../util/cookie-man";
 
 function Sells(){
+  const seller = get_group() >= 3
   const [query, setQuery] = useState({})
   const [sells, setSells] = useState([])
   const [sell, setCurrentSell] = useState()
@@ -74,7 +76,7 @@ function Sells(){
           return
         }
         deleteSell(row.sell_id).then(()=>triggerFetch())
-      }} className="btn btn-danger"><i className="fa-solid fa-trash"/></button>,
+      }} className="btn btn-danger" disabled={seller}><i className="fa-solid fa-trash"/></button>,
     },
   ];
 

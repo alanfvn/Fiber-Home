@@ -110,7 +110,6 @@ function SellModal(props){
           {
           isNew ?
             <>
-              {/* new sell */}
               <div className="row mb-3">
                 <div className="col-6">
                   <label>Usuario</label>
@@ -184,7 +183,7 @@ function SellModal(props){
                 <div className="col-6">
                   <label>Fecha venta</label>
                   <input type="date" disabled={true} className="form-control" defaultValue={
-                    new Date(Date.parse(inputs?.sell_date)).toLocaleDateString('en-CA')
+                    new Date(inputs?.sell_date).toLocaleDateString('en-CA')
                   }/>
                 </div>
               </div>
@@ -196,8 +195,8 @@ function SellModal(props){
                   <AsyncSelect
                     onChange={handleSelect}
                     defaultValue={inputs?.install_worker ? {value: inputs?.install_worker, label: inputs?.installer} : null}
-                    isDisabled={seller}
                     isClearable
+                    isDisabled={seller}
                     loadOptions={getStaff}
                     />
                 </div>
