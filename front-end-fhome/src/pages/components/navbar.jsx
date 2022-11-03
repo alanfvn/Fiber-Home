@@ -1,6 +1,6 @@
 import { Navbar, Nav, Container } from 'react-bootstrap'
 import { useLocation, useNavigate } from 'react-router-dom';
-import { clean_cookies, is_user_auth } from '../../util/cookie-man';
+import { clean_cookies, is_user_auth} from '../../util/cookie-man';
 
 function CustomNavbar(){
   const location = useLocation();

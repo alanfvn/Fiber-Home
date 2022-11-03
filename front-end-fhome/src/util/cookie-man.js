@@ -42,4 +42,8 @@ function get_uid(){
   return cookies.get('uid') ?? -1
 }
 
-export {clean_cookies, set_cookies, is_user_auth, get_token, get_group, get_uid}
+function get_name(){
+  return cookies.get('username')
+}
+
+export {clean_cookies, set_cookies, is_user_auth, get_token, get_group, get_uid, get_name}

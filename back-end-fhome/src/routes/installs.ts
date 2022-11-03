@@ -34,7 +34,6 @@ installs.post('/upsert', async (req,res)=>{
     res.status(400).send("Invalid request you must specify the sell id")
     return 
   }
-  console.log(data)
   const {log_text}= await upsert_install(install) || {}
   res.json({message: log_text})
 })

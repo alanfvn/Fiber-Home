@@ -38,7 +38,6 @@ async function search_staff(query: string){
   return data?.rows
 }
 
-
 //users
 async function upsert_user(user: User){
   let client 
@@ -47,7 +46,7 @@ async function upsert_user(user: User){
 
   try{
     client = await conPool.connect()
-    data = await client.query('call upsert_user($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)', params) 
+    data = await client.query("call upsert_user($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::timestamp at time zone 'cst', $11)", params) 
   }catch(e){
     console.log(`Error create staff: ${e}`)
   }finally{
@@ -99,7 +98,9 @@ async function create_sell(seller: number, start: Date, end: Date,user: User){
 
   try{
     client = await conPool.connect()
-    data = await client.query('call create_sell($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14::uuid)', params)
+    data = await client.query(
+      "call create_sell($1, $2::timestamp at time zone 'cst', $3::timestamp at time zone 'cst', $4, $5, $6, $7, $8, $9, $10, $11, $12, $13::timestamp at time zone 'cst', $14::uuid)"
+      , params)
   }catch(e){
     console.log(`ERROR Creating sell: ${e}`)
   }finally{
@@ -141,7 +142,7 @@ async function upsert_install(idata: Install){
   const params = [...Object.values(idata), null]
   try{
     client = await conPool.connect()
-    data = await client.query('call upsert_install($1, $2, $3, $4)', params) 
+    data = await client.query("call upsert_install($1, $2, $3::timestamp at time zone 'cst', $4)", params) 
   }catch(e){
     console.log(`Error upsert install ${e}`)
   }finally{

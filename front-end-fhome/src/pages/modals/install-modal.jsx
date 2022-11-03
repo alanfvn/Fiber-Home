@@ -39,7 +39,6 @@ function InstallModal(props){
   const handleInputs = (e) =>{
     const {name, value} = e.target
     setInputs({...inputs, [name]: value})
-    console.log(inputs)
   }
 
   const handleSelect = (e) => {
@@ -66,7 +65,7 @@ function InstallModal(props){
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title>Instalacion</Modal.Title>
+        <Modal.Title>Instalación</Modal.Title>
       </Modal.Header>
 
       <form onSubmit={submit}>
@@ -93,7 +92,7 @@ function InstallModal(props){
                 />
             </div>
             <div className="col-6">
-              <label>Fecha de instalacion</label>
+              <label>Fecha de instalación</label>
               <input name="install_date" className='form-control' type="date" defaultValue={
                 inputs?.install_date ? new Date(inputs?.install_date).toLocaleDateString('en-CA') : null
               }

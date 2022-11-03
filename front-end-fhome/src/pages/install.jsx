@@ -42,11 +42,11 @@ function Installation(){
       selector: row => row.worker,
     },
     {
-      name: 'Fecha de instalacion',
+      name: 'Fecha de instalación',
       selector: row => row.install_date ? new Date(row.install_date).toLocaleDateString() : "No asignado"
     },
     {
-      name: 'Instalcion realizada',
+      name: 'Instalción realizada',
       selector: row =><Badge bg={row.install_date ? "success" : "danger"} text="light">
         {row.install_date ? "Realizada" : "No realizada"}
       </Badge> 
