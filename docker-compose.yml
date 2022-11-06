@@ -15,7 +15,7 @@ services:
     volumes:
       - ./page:/back_end/usr/src/app
     links:
-      - database
+      - postgres
   front_end:
     container_name: front_end
     build: ./front-end-fhome
