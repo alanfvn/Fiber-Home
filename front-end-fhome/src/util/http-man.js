@@ -4,7 +4,7 @@ import { get_token } from "./cookie-man";
 const token = get_token()
 
 const HttpMan = axios.create({
-  baseURL: "http://localhost:3001", 
+  baseURL: process.env.REACT_APP_REST,
   headers: { Authorization: token }
 }) 
 

@@ -15,10 +15,10 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 //endpoints
-app.use('/auth',auth)
-app.use('/user', users)
-app.use('/sells', sells)
-app.use('/installs', installs)
+app.use('/api/auth',auth)
+app.use('/api/user', users)
+app.use('/api/sells', sells)
+app.use('/api/installs', installs)
 
 app.listen(port, ()=>{
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

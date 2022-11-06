@@ -1,3 +1,6 @@
+-- ENCRYPTION
+CREATE EXTENSION pgcrypto;
+
 -- tabla de los grupos
 create table tb_groups(
     group_id serial primary key not null,
@@ -292,7 +295,7 @@ $$
 DECLARE log_d text;
 BEGIN
     CALL upsert_user(
-      'alan', 2, 'alan123', 
+      'alan', 1, 'alan123', 
       'Alan David', 'Gonzalez Lopez', '20204040', 
       '28790000101', 'alan@gmail.com', 
       '1a calle coban a.v', '2000-09-24', log_d);
